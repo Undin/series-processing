@@ -20,7 +20,7 @@ def rename_episode(filepath: Path):
         filepath.rename(new_filepath)
 
 
-EPISODE_NAME_RE = re.compile(r"^(?P<name>.*)([Ss](?P<season>\d+))([Ee]?(?P<episode>\d+)).*?(?P<resolution>\d+([pi])).*?\.(?P<extension>mkv|mp4|wmv|avi)$")
+EPISODE_NAME_RE = re.compile(r"^(?P<name>.*)([Ss](?P<season>\d+))([Ee]?(?P<episode>\d+)).*?(?P<resolution>\d+([p\u0440i])).*?\.(?P<extension>mkv|mp4|wmv|avi)$")
 
 def normalize(filename: str) -> Optional[str]:
     match = EPISODE_NAME_RE.match(filename)
@@ -42,6 +42,9 @@ def normalize(filename: str) -> Optional[str]:
         resolution = input("Provide episode resolution")
         if not resolution.endswith("p"):
             resolution = resolution + "p"
+    else:
+        # replace russian `р` with english `p`
+        resolution = resolution.replace('\u0440', 'p')
 
     extension = match.group("extension")
 
