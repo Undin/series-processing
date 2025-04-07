@@ -8,7 +8,8 @@ params: list[tuple[str, Optional[str]]] = [
     ("Money.Heist.S02E01.1080p.WEB-DL.x264-EDHD_Kyle.mkv", "Money.Heist.S02E01.1080p.mkv"),
     ("The.Good.Doctor.S06E12.WEBDL.1080p.RGzsRutracker.mkv", "The.Good.Doctor.S06E12.1080p.mkv"),
     ("The Office 09.01(169) - Новички (New Guys).mkv", None),
-    ("Lupin.S03E04.1080р.NF.WEB-DL.RGzsRutracker.mkv", "Lupin.S03E04.1080p.mkv")
+    ("Lupin.S03E04.1080р.NF.WEB-DL.RGzsRutracker.mkv", "Lupin.S03E04.1080p.mkv"),
+    ("Friends.S10E17E18.1080p.BD_Remux.mkv", "Friends.S10E17E18.1080p.mkv")
 ]
 
 class RenameEpisodeTest(unittest.TestCase):
