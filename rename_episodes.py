@@ -19,8 +19,9 @@ def rename_episode(filepath: Path):
         new_filepath = filepath.parent / new_name
         filepath.rename(new_filepath)
 
+EPISODE_GROUP_RE = re.compile(r"[Ee](?P<episode>\d+)")
+EPISODE_NAME_RE = re.compile(rf"^(?P<name>.*)([Ss](?P<season>\d+))(?P<episodes>({EPISODE_GROUP_RE.pattern})+).*?(?P<resolution>\d+([p\u0440i])).*?\.(?P<extension>mkv|mp4|wmv|avi)$")
 
-EPISODE_NAME_RE = re.compile(r"^(?P<name>.*)([Ss](?P<season>\d+))([Ee]?(?P<episode>\d+)).*?(?P<resolution>\d+([p\u0440i])).*?\.(?P<extension>mkv|mp4|wmv|avi)$")
 
 def normalize(filename: str) -> Optional[str]:
     match = EPISODE_NAME_RE.match(filename)
@@ -33,9 +34,13 @@ def normalize(filename: str) -> Optional[str]:
     if len(season_number) == 1:
         season_number = "0" + season_number
 
-    episode_number = match.group("episode")
-    if len(episode_number) == 1:
-        episode_number = "0" + episode_number
+    episodes_group = match.group("episodes")
+    episode_numbers = ""
+    for m in EPISODE_GROUP_RE.finditer(episodes_group):
+        episode_number = m.group("episode")
+        if len(episode_number) == 1:
+            episode_number = "0" + episode_number
+        episode_numbers += f"E{episode_number}"
 
     resolution = match.group("resolution")
     if not resolution:
@@ -48,7 +53,7 @@ def normalize(filename: str) -> Optional[str]:
 
     extension = match.group("extension")
 
-    return f"{show_name}.S{season_number}E{episode_number}.{resolution}.{extension}"
+    return f"{show_name}.S{season_number}{episode_numbers}.{resolution}.{extension}"
 
 
 def main():
