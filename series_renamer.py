@@ -282,13 +282,14 @@ class SeriesRenamer:
             if height_match:
                 height = int(height_match.group(1))
                 # Map common heights to resolution labels
-                if height >= 2160:
+                # Use slightly lower thresholds to account for minor variations (e.g., 1068, 1072 -> 1080p)
+                if height >= 2000:
                     return "2160p"
-                elif height >= 1080:
+                elif height >= 1000:
                     return "1080p"
-                elif height >= 720:
+                elif height >= 680:
                     return "720p"
-                elif height >= 480:
+                elif height >= 450:
                     return "480p"
                 else:
                     return f"{height}p"
