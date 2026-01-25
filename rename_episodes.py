@@ -12,9 +12,15 @@ def rename_episodes(directory: Path, dry_run: bool = False):
     print(f"--- Processing {directory} ---")
     print()
 
+    # First, rename all files in current directory
     for file in sorted(directory.iterdir()):
         if file.is_file():
             rename_episode(file, dry_run)
+
+    # Then, recursively process subdirectories
+    for subdir in sorted(directory.iterdir()):
+        if subdir.is_dir():
+            rename_episodes(subdir, dry_run)
 
 
 def rename_episode(filepath: Path, dry_run: bool = False):
