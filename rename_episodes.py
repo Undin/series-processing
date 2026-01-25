@@ -8,6 +8,10 @@ from typing import Optional
 
 
 def rename_episodes(directory: Path, dry_run: bool = False):
+    print()
+    print(f"--- Processing {directory} ---")
+    print()
+
     for file in sorted(directory.iterdir()):
         if file.is_file():
             rename_episode(file, dry_run)
@@ -16,9 +20,12 @@ def rename_episodes(directory: Path, dry_run: bool = False):
 def rename_episode(filepath: Path, dry_run: bool = False):
     new_name = normalize(filepath.name)
     if new_name:
+        print(f"{filepath.name} -> {new_name}")
         new_filepath = filepath.parent / new_name
         if not dry_run:
             filepath.rename(new_filepath)
+    else:
+        print(f"Skipping {filepath.name}")
 
 EPISODE_GROUP_RE = re.compile(r"[Ee](?P<episode>\d+)")
 EPISODE_NAME_RE = re.compile(rf"^(?P<name>.*)([Ss](?P<season>\d+))(?P<episodes>({EPISODE_GROUP_RE.pattern})+).*?(?P<resolution>\d+([p\u0440i])).*?\.(?P<extension>mkv|mp4|wmv|avi)$")
