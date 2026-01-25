@@ -7,17 +7,18 @@ from pathlib import Path
 from typing import Optional
 
 
-def rename_episodes(directory: Path):
+def rename_episodes(directory: Path, dry_run: bool = False):
     for file in sorted(directory.iterdir()):
         if file.is_file():
-            rename_episode(file)
+            rename_episode(file, dry_run)
 
 
-def rename_episode(filepath: Path):
+def rename_episode(filepath: Path, dry_run: bool = False):
     new_name = normalize(filepath.name)
     if new_name:
         new_filepath = filepath.parent / new_name
-        filepath.rename(new_filepath)
+        if not dry_run:
+            filepath.rename(new_filepath)
 
 EPISODE_GROUP_RE = re.compile(r"[Ee](?P<episode>\d+)")
 EPISODE_NAME_RE = re.compile(rf"^(?P<name>.*)([Ss](?P<season>\d+))(?P<episodes>({EPISODE_GROUP_RE.pattern})+).*?(?P<resolution>\d+([p\u0440i])).*?\.(?P<extension>mkv|mp4|wmv|avi)$")
@@ -59,6 +60,8 @@ def normalize(filename: str) -> Optional[str]:
 def main():
     parser = argparse.ArgumentParser(description="Script to properly name episodes")
     parser.add_argument("path", help="Path to directory")
+    parser.add_argument("--dry-run", "-n", action="store_true",
+                        help="Show expected changes without renaming")
 
     args = parser.parse_args()
 
@@ -69,9 +72,9 @@ def main():
         exit(1)
 
     if path.is_file():
-        rename_episode(path)
+        rename_episode(path, args.dry_run)
     else:
-        rename_episodes(path)
+        rename_episodes(path, args.dry_run)
 
 
 if __name__ == '__main__':
